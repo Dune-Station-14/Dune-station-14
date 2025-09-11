@@ -2,7 +2,7 @@
 - type: entity
   parent: ClothingOuterHardsuitBase
   id: AtreidesTrooperArmor
-  name: Atreides Trooper Armor
+  name: Atreides trooper armor
   description: A lightweight visored combat suit worn by House Atreides foot soldiers
   components:
   - type: Sprite
