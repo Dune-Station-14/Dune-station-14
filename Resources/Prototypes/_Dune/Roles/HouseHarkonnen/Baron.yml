@@ -1,16 +1,16 @@
 - type: job
-  id: Harkonnen
-  name: job-name-harkonnen
-  description: job-description-harkonnen
-  playTimeTracker: JobHarkonnen
-  startingGear: HarkonnenGear
+  id: Baron
+  name: job-name-baron
+  description: job-description-baron
+  playTimeTracker: JobBaron
+  startingGear: BaronGear
   icon: "JobIconQuarterMaster"
 #  access:
 #  - Harkonnen put this in later
 
 # All of this shits a placeholder. Should have armor set, a weapon, a shield, some food and water
 - type: startingGear
-  id: HarkonnenGear
+  id: BaronGear
   equipment:
     id: QuartermasterPDA
     ears: ClothingHeadsetQM
@@ -21,8 +21,8 @@
     - Flash
 
 - type: chameleonOutfit
-  id: HarkonnenChameleonOutfit
-  job: Harkonnen
+  id: BaronChameleonOutfit
+  job: Baron
   equipment:
     head: ClothingHeadHatQMsoft
     eyes: ClothingEyesGlassesSunglasses

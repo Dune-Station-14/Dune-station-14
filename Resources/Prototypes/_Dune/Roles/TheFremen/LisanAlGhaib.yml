@@ -1,16 +1,16 @@
 - type: job
-  id: Harkonnen
-  name: job-name-harkonnen
-  description: job-description-harkonnen
-  playTimeTracker: JobHarkonnen
-  startingGear: HarkonnenGear
+  id: LisanAlGhaib
+  name: job-name-lisanalghaib
+  description: job-description-lisanalghaib
+  playTimeTracker: JobLisanAlGhaib
+  startingGear: LisanAlGhaibGear
   icon: "JobIconQuarterMaster"
 #  access:
-#  - Harkonnen put this in later
+#  - Fremen put this in later
 
-# All of this shits a placeholder. Should have armor set, a weapon, a shield, some food and water
+# All of this shits a placeholder. Should have armor set, a weapon, some food and water
 - type: startingGear
-  id: HarkonnenGear
+  id: LisanAlGhaibGear
   equipment:
     id: QuartermasterPDA
     ears: ClothingHeadsetQM
@@ -21,8 +21,8 @@
     - Flash
 
 - type: chameleonOutfit
-  id: HarkonnenChameleonOutfit
-  job: Harkonnen
+  id: LisanAlGhaibChameleonOutfit
+  job: LisanAlGhaib
   equipment:
     head: ClothingHeadHatQMsoft
     eyes: ClothingEyesGlassesSunglasses

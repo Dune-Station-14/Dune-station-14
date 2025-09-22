@@ -7,3 +7,12 @@
 - type: playTimeTracker
   id: JobAtreidesSurvivor
 
+- type: playTimeTracker
+  id: JobFremen
+
+- type: playTimeTracker
+  id: JobHarkonnen
+
+- type: playTimeTracker
+  id: JobOffworlder
+
