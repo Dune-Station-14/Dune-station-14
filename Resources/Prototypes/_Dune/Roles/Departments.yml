@@ -1,0 +1,37 @@
+- type: department
+  id: HouseAtreides
+  name: department-HouseAtreides
+  description: department-Atreides-description
+  color: "#A46106"
+  roles:
+  - AtreidesSurvivor
+
+- type: department
+  id: TheFremen
+  name: department-Fremen
+  description: department-Fremen-description
+  color: "#9FED58"
+  weight: -10
+  roles:
+  - LisanAlGhaib
+  - Naib
+  - Fremen
+
+- type: department
+  id: HouseHarkonnen
+  name: department-HouseHarkonnen
+  description: department-Harkonnen-description
+  color: "#0c344d"
+  roles:
+  - Baron
+  - NaBaron
+  - Harkonnen
+
+- type: department
+  id: Offworlders
+  name: department-Offworlders
+  description: department-Offworlder-description
+  color: "#334E6D"
+  roles:
+  - Offworlder
+  - Smuggler

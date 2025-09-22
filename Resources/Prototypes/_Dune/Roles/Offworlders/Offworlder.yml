@@ -1,0 +1,32 @@
+- type: job
+  id: Offworlder
+  name: job-name-offworlder
+  description: job-description-offworlder
+  playTimeTracker: JobOffworlder
+  startingGear: OffworlderGear
+  icon: "JobIconQuarterMaster"
+#  access:
+#  - Atreides put this in later
+
+# All of this shits a placeholder. Should have armor set, a weapon, a shield, some food and water
+- type: startingGear
+  id: OffworlderGear
+  equipment:
+    id: QuartermasterPDA
+    ears: ClothingHeadsetQM
+    belt: BoxFolderClipboard
+    pocket1: AppraisalTool
+  storage:
+    back:
+    - Flash
+
+- type: chameleonOutfit
+  id: OffworlderChameleonOutfit
+  job: Offworlder
+  equipment:
+    head: ClothingHeadHatQMsoft
+    eyes: ClothingEyesGlassesSunglasses
+    mask: ClothingMaskBreath
+    outerClothing: ClothingOuterWinterQM
+    neck: ClothingNeckCloakQm
+    gloves: ClothingHandsKnuckleDustersQM

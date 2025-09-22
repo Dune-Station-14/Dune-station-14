@@ -1,0 +1,32 @@
+- type: job
+  id: Harkonnen
+  name: job-name-harkonnen
+  description: job-description-harkonnen
+  playTimeTracker: JobHarkonnen
+  startingGear: HarkonnenGear
+  icon: "JobIconQuarterMaster"
+#  access:
+#  - Harkonnen put this in later
+
+# All of this shits a placeholder. Should have armor set, a weapon, a shield, some food and water
+- type: startingGear
+  id: HarkonnenGear
+  equipment:
+    id: QuartermasterPDA
+    ears: ClothingHeadsetQM
+    belt: BoxFolderClipboard
+    pocket1: AppraisalTool
+  storage:
+    back:
+    - Flash
+
+- type: chameleonOutfit
+  id: HarkonnenChameleonOutfit
+  job: HarkonnenSurvivor
+  equipment:
+    head: ClothingHeadHatQMsoft
+    eyes: ClothingEyesGlassesSunglasses
+    mask: ClothingMaskBreath
+    outerClothing: ClothingOuterWinterQM
+    neck: ClothingNeckCloakQm
+    gloves: ClothingHandsKnuckleDustersQM
