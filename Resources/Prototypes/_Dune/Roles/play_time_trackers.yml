@@ -11,8 +11,25 @@
   id: JobFremen
 
 - type: playTimeTracker
+  id: JobLisanAlGhaib
+
+- type: playTimeTracker
+  id: JobNaib
+
+- type: playTimeTracker
   id: JobHarkonnen
 
 - type: playTimeTracker
+  id: JobBaron
+
+- type: playTimeTracker
+  id: Jobna-Baron
+
+- type: playTimeTracker
   id: JobOffworlder
+
+- type: playTimeTracker
+  id: JobSmuggler
+
+
 
