@@ -1,7 +1,7 @@
 - type: department
   id: HouseAtreides
   name: department-HouseAtreides
-  description: department-Atreides-description
+  description: department-HouseAtreides-description
   color: "#A46106"
   roles:
   - AtreidesSurvivor
@@ -20,7 +20,7 @@
 - type: department
   id: HouseHarkonnen
   name: department-HouseHarkonnen
-  description: department-Harkonnen-description
+  description: department-HouseHarkonnen-description
   color: "#0c344d"
   roles:
   - Baron
@@ -30,7 +30,7 @@
 - type: department
   id: Offworlders
   name: department-Offworlders
-  description: department-Offworlder-description
+  description: department-Offworlders-description
   color: "#334E6D"
   roles:
   - Offworlder
