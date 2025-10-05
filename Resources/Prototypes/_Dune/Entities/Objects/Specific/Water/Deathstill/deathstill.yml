@@ -1,0 +1,35 @@
+- type: entity
+  id: Deathstill
+  parent: BaseItem
+  name: deathstill
+  description: A spike for collecting meat from animals.
+  components:
+  - type: Deathstill
+  - type: SolutionContainerManager
+    solutions:
+      deathstill:
+        maxVol: 30
+  - type: Sprite
+    sprite: Objects/Specific/Chemistry/syringe.rsi
+    layers:
+    - state: syringe1
+      map: ["enum.SolutionContainerLayers.Fill"]
+      visible: false
+    - state: syringe_base0
+      map: ["enum.SolutionContainerLayers.Base"]
+  - type: Icon
+    sprite: Objects/Specific/Chemistry/syringe.rsi
+    state: "syringe_base0"
+  - type: Item
+    size: Tiny
+    sprite: Objects/Specific/Chemistry/syringe.rsi
+  - type: Clothing
+    sprite: Objects/Tools/jaws_of_life.rsi
+    quickEquip: false
+    slots:
+    - Belt
+  - type: ExaminableSolution
+    solution: deathstill
+    exactVolume: true
+  - type: Spillable
+    solution: deathstill
