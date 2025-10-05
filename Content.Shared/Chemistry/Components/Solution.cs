@@ -385,6 +385,31 @@ namespace Content.Shared.Chemistry.Components
             ValidateSolution();
         }
 
+        public void SetReagent(ReagentId id, FixedPoint2 quantity, bool dirtyHeatCap = true)
+        {
+            if (quantity <= 0)
+            {
+                DebugTools.Assert(quantity == 0, "Attempted to add negative reagent quantity");
+                return;
+            }
+
+            Volume = quantity;
+            _heatCapacityDirty |= dirtyHeatCap;
+            for (var i = 0; i < Contents.Count; i++)
+            {
+                var (reagent, existingQuantity) = Contents[i];
+                if (reagent != id)
+                    continue;
+
+                Contents[i] = new ReagentQuantity(id, quantity);
+                ValidateSolution();
+                return;
+            }
+
+            Contents.Add(new ReagentQuantity(id, quantity));
+            ValidateSolution();
+        }
+
         /// <summary>
         ///     Adds a given quantity of a reagent directly into the solution.
         /// </summary>
