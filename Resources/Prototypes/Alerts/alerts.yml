@@ -379,6 +379,15 @@
   description: alerts-parched-desc
 
 - type: alert
+  id: Dead
+  category: Thirst
+  icons:
+  - sprite: /Textures/Interface/Alerts/thirst.rsi
+    state: parched
+  name: Dead
+  description: alerts-parched-desc
+
+- type: alert
   id: Muted
   icons: [ /Textures/Interface/Alerts/Abilities/silenced.png ]
   name: alerts-muted-name

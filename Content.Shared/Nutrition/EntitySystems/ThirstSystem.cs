@@ -10,6 +10,14 @@ using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using System.Diagnostics.CodeAnalysis;
+using Content.Shared.Administration.Logs;
+using Content.Shared.Body.Components;
+using Content.Shared.Body.Systems;
+using Content.Shared.Chemistry.Components;
+using Content.Shared.Chemistry.Components.SolutionManager;
+using Content.Shared.Chemistry.EntitySystems;
+using Content.Shared.Database;
+using Content.Shared.Mobs;
 
 namespace Content.Shared.Nutrition.EntitySystems;
 
@@ -23,6 +31,10 @@ public sealed class ThirstSystem : EntitySystem
     [Dependency] private readonly MovementSpeedModifierSystem _movement = default!;
     [Dependency] private readonly SharedJetpackSystem _jetpack = default!;
 
+    [Dependency] private readonly SharedSolutionContainerSystem _solutionContainerSystem = default!;
+    [Dependency] private readonly ISharedAdminLogManager _logger = default!;
+    [Dependency] private readonly SharedBodySystem _body = default!;
+
     private static readonly ProtoId<SatiationIconPrototype> ThirstIconOverhydratedId = "ThirstIconOverhydrated";
     private static readonly ProtoId<SatiationIconPrototype> ThirstIconThirstyId = "ThirstIconThirsty";
     private static readonly ProtoId<SatiationIconPrototype> ThirstIconParchedId = "ThirstIconParched";
@@ -34,6 +46,14 @@ public sealed class ThirstSystem : EntitySystem
         SubscribeLocalEvent<ThirstComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshMovespeed);
         SubscribeLocalEvent<ThirstComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<ThirstComponent, RejuvenateEvent>(OnRejuvenate);
+        SubscribeLocalEvent<ThirstComponent, MobStateChangedEvent>(OnMobStateChanged);
+    }
+
+    private void OnMobStateChanged(EntityUid uid, ThirstComponent component, MobStateChangedEvent args)
+    {
+        if (args.NewMobState == MobState.Dead)
+            component.ThirstyCategory = "Dead";
+        Dirty(uid, component);
     }
 
     private void OnMapInit(EntityUid uid, ThirstComponent component, MapInitEvent args)
@@ -97,12 +117,39 @@ public sealed class ThirstSystem : EntitySystem
 
     public void SetThirst(EntityUid uid, ThirstComponent component, float amount)
     {
-        component.CurrentThirst = Math.Clamp(amount,
-            component.ThirstThresholds[ThirstThreshold.Dead],
-            component.ThirstThresholds[ThirstThreshold.OverHydrated]
-        );
+        if (!TryComp<BodyComponent>(uid, out var body))
+            return;
+        var organs = _body.GetBodyOrganEntityComps<StomachComponent>((uid, body));
 
-        DirtyField(uid, component, nameof(ThirstComponent.CurrentThirst));
+        foreach (var ent in organs)
+        {
+            if (!TryComp<SolutionContainerManagerComponent>(ent, out var stomachSolutionsManager))
+                continue;
+
+            if (!_solutionContainerSystem.ResolveSolution((ent, stomachSolutionsManager), component.WaterSolutionName, ref component.Solution, out _))
+                continue;
+
+            var stomachSolutions = component.Solution.Value.Comp.Solution.Contents.ToArray();
+
+            foreach (var solutions in stomachSolutions)
+            {
+                if (solutions.Reagent.Prototype != "Water")
+                    continue;
+
+                component.Solution.Value.Comp.Solution.SetReagent(solutions.Reagent,
+                    Math.Clamp(amount,
+                        component.ThirstThresholds[ThirstThreshold.Dead],
+                        component.ThirstThresholds[ThirstThreshold.OverHydrated]));
+
+            }
+            component.CurrentThirst = component.Solution.Value.Comp.Solution.Volume.Int();
+            DirtyField(uid, component, nameof(ThirstComponent.CurrentThirst));
+        }
+        //
+        // component.CurrentThirst = Math.Clamp(amount,
+        //     component.ThirstThresholds[ThirstThreshold.Dead],
+        //     component.ThirstThresholds[ThirstThreshold.OverHydrated]
+        // );
     }
 
     private bool IsMovementThreshold(ThirstThreshold threshold)
@@ -202,15 +249,36 @@ public sealed class ThirstSystem : EntitySystem
     {
         base.Update(frameTime);
 
-        var query = EntityQueryEnumerator<ThirstComponent>();
-        while (query.MoveNext(out var uid, out var thirst))
+        var query = EntityQueryEnumerator<ThirstComponent, BodyComponent>();
+        while (query.MoveNext(out var uid, out var thirst, out var body))
         {
-            if (_timing.CurTime < thirst.NextUpdateTime)
+            if (_timing.CurTime < thirst.NextUpdateTime || thirst.ThirstyCategory == "Dead")
                 continue;
+
+            var organs = _body.GetBodyOrganEntityComps<StomachComponent>((uid, body));
 
             thirst.NextUpdateTime += thirst.UpdateRate;
 
-            ModifyThirst(uid, thirst, -thirst.ActualDecayRate);
+            foreach (var ent in organs)
+            {
+                if (!TryComp<SolutionContainerManagerComponent>(ent, out var stomachSolutionsManager))
+                    continue;
+
+                if (!_solutionContainerSystem.TryGetSolution((ent, stomachSolutionsManager), thirst.WaterSolutionName, out var stomach))
+                    continue;
+
+                var stomachSolutions = stomach.Value.Comp.Solution.Contents.ToArray();
+
+                foreach (var solutions in stomachSolutions)
+                {
+                    if (solutions.Reagent.Prototype != "Water")
+                        continue;
+
+                    _solutionContainerSystem.RemoveReagent(stomach.Value, solutions.Reagent, thirst.ActualDecayRate);
+                    ModifyThirst(uid, thirst, -thirst.ActualDecayRate);
+                }
+            }
+
             var calculatedThirstThreshold = GetThirstThreshold(thirst, thirst.CurrentThirst);
 
             if (calculatedThirstThreshold == thirst.CurrentThirstThreshold)
