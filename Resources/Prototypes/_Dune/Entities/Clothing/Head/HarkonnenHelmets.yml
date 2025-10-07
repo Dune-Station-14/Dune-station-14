@@ -2,7 +2,7 @@
 - type: entity
   parent:  ClothingHeadHardsuitBase
   id: ClothingHeadHelmetHarkonnenTrooperArmor
-  name: Harkonnen Trooper Helmet
+  name: Harkonnen trooper helmet
   description: A bulky, jet black helmet worn by House Harkonnen foot soldiers.
   components:
   - type: Sprite
