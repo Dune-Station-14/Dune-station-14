@@ -21,3 +21,8 @@
         reagents:
         - ReagentId: UncookedAnimalProteins
           Quantity: 5
+      water:
+        maxVol: 600
+        reagents:
+        - ReagentId: Water
+          Quantity: 600

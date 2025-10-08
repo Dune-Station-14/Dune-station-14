@@ -18,6 +18,11 @@
         reagents:
         - ReagentId: UncookedAnimalProteins
           Quantity: 5
+      water:
+        maxVol: 600
+        reagents:
+        - ReagentId: Water
+          Quantity: 600
   - type: Metabolizer
     maxReagents: 3
     metabolizerTypes: [ Moth ]
