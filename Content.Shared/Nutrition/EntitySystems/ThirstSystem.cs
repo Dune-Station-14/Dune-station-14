@@ -8,15 +8,12 @@ using JetBrains.Annotations;
 using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Timing;
-using Robust.Shared.Utility;
 using System.Diagnostics.CodeAnalysis;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Body.Components;
 using Content.Shared.Body.Systems;
-using Content.Shared.Chemistry.Components;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.EntitySystems;
-using Content.Shared.Database;
 using Content.Shared.Mobs;
 
 namespace Content.Shared.Nutrition.EntitySystems;
@@ -145,11 +142,6 @@ public sealed class ThirstSystem : EntitySystem
             component.CurrentThirst = component.Solution.Value.Comp.Solution.Volume.Int();
             DirtyField(uid, component, nameof(ThirstComponent.CurrentThirst));
         }
-        //
-        // component.CurrentThirst = Math.Clamp(amount,
-        //     component.ThirstThresholds[ThirstThreshold.Dead],
-        //     component.ThirstThresholds[ThirstThreshold.OverHydrated]
-        // );
     }
 
     private bool IsMovementThreshold(ThirstThreshold threshold)

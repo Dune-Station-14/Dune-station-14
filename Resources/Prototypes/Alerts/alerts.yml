@@ -382,7 +382,7 @@
   id: Dead
   category: Thirst
   icons:
-  - sprite: /Textures/Interface/Alerts/thirst.rsi
+  - sprite: /Textures/Interface/Alerts/thirst.rsi # sprite for dead?
     state: parched
   name: Dead
   description: alerts-parched-desc
