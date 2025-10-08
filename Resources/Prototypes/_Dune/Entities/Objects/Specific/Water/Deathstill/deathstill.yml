@@ -1,35 +1,65 @@
 - type: entity
   id: Deathstill
-  parent: BaseItem
-  name: deathstill
-  description: A spike for collecting meat from animals.
+  parent: BaseStructure
+  name: fremen deathstill
+  description: The Fremen device for extracting all the moisture from living or dead people or creatures
   components:
   - type: Deathstill
   - type: SolutionContainerManager
     solutions:
       deathstill:
-        maxVol: 30
-  - type: Sprite
-    sprite: Objects/Specific/Chemistry/syringe.rsi
-    layers:
-    - state: syringe1
-      map: ["enum.SolutionContainerLayers.Fill"]
-      visible: false
-    - state: syringe_base0
-      map: ["enum.SolutionContainerLayers.Base"]
-  - type: Icon
-    sprite: Objects/Specific/Chemistry/syringe.rsi
-    state: "syringe_base0"
-  - type: Item
-    size: Tiny
-    sprite: Objects/Specific/Chemistry/syringe.rsi
-  - type: Clothing
-    sprite: Objects/Tools/jaws_of_life.rsi
-    quickEquip: false
-    slots:
-    - Belt
+        maxVol: 300
   - type: ExaminableSolution
     solution: deathstill
     exactVolume: true
-  - type: Spillable
+  - type: DrainableSolution
     solution: deathstill
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.45,-0.45,0.45,0.05"
+        density: 190
+        mask:
+          - TableMask
+  - type: Sprite
+    sprite: Structures/Furniture/furniture.rsi
+    state: bed
+    noRot: true
+  - type: Strap
+    position: Down
+    rotation: -90
+    # Construction has to be before PlaceableSurface or you'll place things onto the entity instead of deconstructing it.
+  - type: Construction
+    graph: bed
+    node: bed
+  - type: Damageable
+    damageContainer: Inorganic
+    damageModifierSet: Metallic
+  - type: Destructible
+    thresholds:
+      - trigger: # Excess damage, don't spawn entities
+          !type:DamageTrigger
+          damage: 200
+        behaviors:
+          - !type:DoActsBehavior
+            acts: ["Destruction"]
+      - trigger:
+          !type:DamageTrigger
+          damage: 75
+        behaviors:
+          - !type:DoActsBehavior
+            acts: ["Destruction"]
+          - !type:SpawnEntitiesBehavior
+            spawn:
+              SheetSteel1:
+                min: 1
+                max: 2
+  - type: Transform
+    anchored: true
+    noRot: true
+  - type: Anchorable
+  - type: Pullable
