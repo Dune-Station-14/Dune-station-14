@@ -56,6 +56,12 @@ public abstract partial class SharedBuckleSystem
         {
             BuckleDoafterEarly((uid, comp), ev.Event, ev);
         });
+
+        SubscribeLocalEvent<BuckleComponent, UnbuckleDoAfterEvent>(OnUnbuckleDoafter);
+        SubscribeLocalEvent<BuckleComponent, DoAfterAttemptEvent<UnbuckleDoAfterEvent>>((uid, comp, ev) =>
+        {
+            UnbuckleDoafterEarly((uid, comp), ev.Event, ev);
+        });
     }
 
     private void OnBuckleComponentShutdown(Entity<BuckleComponent> ent, ref ComponentShutdown args)
@@ -382,10 +388,13 @@ public abstract partial class SharedBuckleSystem
                 break;
         }
 
-        var ev = new StrappedEvent(strap, buckle);
+        if (user == null)
+            return;
+
+        var ev = new StrappedEvent(strap, buckle, user.Value);
         RaiseLocalEvent(strap, ref ev);
 
-        var gotEv = new BuckledEvent(strap, buckle);
+        var gotEv = new BuckledEvent(strap, buckle, user.Value);
         RaiseLocalEvent(buckle, ref gotEv);
 
         if (TryComp<PhysicsComponent>(buckle, out var physics))
@@ -482,10 +491,13 @@ public abstract partial class SharedBuckleSystem
 
         _joints.RefreshRelay(buckle);
 
-        var buckleEv = new UnbuckledEvent(strap, buckle);
+        if (user == null)
+            return;
+
+        var buckleEv = new UnbuckledEvent(strap, buckle, user.Value);
         RaiseLocalEvent(buckle, ref buckleEv);
 
-        var strapEv = new UnstrappedEvent(strap, buckle);
+        var strapEv = new UnstrappedEvent(strap, buckle, user.Value);
         RaiseLocalEvent(strap, ref strapEv);
     }
 
@@ -533,6 +545,27 @@ public abstract partial class SharedBuckleSystem
         return !unstrapAttempt.Cancelled;
     }
 
+    private void OnUnbuckleDoafter(Entity<BuckleComponent> entity, ref UnbuckleDoAfterEvent args)
+    {
+        if (args.Cancelled || args.Handled || args.Target == null)
+            return;
+
+        args.Handled = TryUnbuckle(args.Target.Value, args.User, popup: false);
+    }
+
+    private void UnbuckleDoafterEarly(Entity<BuckleComponent> entity, UnbuckleDoAfterEvent args, CancellableEntityEventArgs ev)
+    {
+        if (args.Target == null || args.Used == null)
+            return;
+
+        if (TryComp<CuffableComponent>(args.Target, out var targetCuffableComp) && targetCuffableComp.CuffedHandCount > 0
+            || _mobState.IsIncapacitated(args.Target.Value) && args.IncapacitatedDelay == false)
+        {
+            ev.Cancel();
+            TryUnbuckle(args.Target.Value, args.User, popup: false);
+        }
+    }
+
     /// <summary>
     /// Once the do-after is complete, try to buckle target to chair/bed
     /// </summary>
@@ -561,7 +594,7 @@ public abstract partial class SharedBuckleSystem
             return;
 
         if (TryComp<CuffableComponent>(args.Target, out var targetCuffableComp) && targetCuffableComp.CuffedHandCount > 0
-            || _mobState.IsIncapacitated(args.Target.Value))
+            || _mobState.IsIncapacitated(args.Target.Value) && args.IncapacitatedDelay == false)
         {
             ev.Cancel();
             TryBuckle(args.Target.Value, args.User, args.Used.Value, popup: false);
