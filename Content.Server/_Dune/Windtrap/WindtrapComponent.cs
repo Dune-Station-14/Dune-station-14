@@ -28,7 +28,7 @@ public sealed partial class WindtrapComponent : Component
     /// <summary>
     /// The next time when the water will be gained.
     /// </summary>
-    [DataField, AutoNetworkedField]
+    [AutoNetworkedField]
     public TimeSpan NextGainTime = TimeSpan.Zero;
 
     /// <summary>
