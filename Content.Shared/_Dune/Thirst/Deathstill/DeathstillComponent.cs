@@ -6,9 +6,7 @@ using Robust.Shared.Serialization.TypeSerializers.Implementations.Custom;
 
 namespace Content.Shared._Dune.Thirst.Deathstill;
 
-/// <summary>
-/// Used to mark entity that should act as a spike.
-/// </summary>
+
 [RegisterComponent, NetworkedComponent]
 [AutoGenerateComponentState, AutoGenerateComponentPause]
 public sealed partial class DeathstillComponent : Component

@@ -17,9 +17,6 @@ using Robust.Shared.Utility;
 
 namespace Content.Shared._Dune.Thirst.Deathstill;
 
-/// <summary>
-/// Used to butcher some entities like monkeys.
-/// </summary>
 public sealed class DeathstillSystem : EntitySystem
 {
     [Dependency] private readonly ExamineSystemShared _examineSystem = default!;
