@@ -147,7 +147,7 @@ public abstract partial class SharedBuckleSystem
             {
                 args.Handled = StartUnbuckleDoAfter(args.User, buckled.Value, uid, component);
             }
-            else
+            else if (TryUnbuckle(buckled.Value, args.User))
             {
                 args.Handled = true;
                 return;
