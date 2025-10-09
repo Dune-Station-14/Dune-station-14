@@ -4,7 +4,7 @@ using Robust.Shared.GameStates;
 
 namespace Content.Server._Dune.Windtrap;
 
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState]
+[RegisterComponent, AutoGenerateComponentState]
 public sealed partial class WindtrapComponent : Component
 {
     /// <summary>
