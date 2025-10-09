@@ -261,13 +261,22 @@ public sealed class ThirstSystem : EntitySystem
 
                 var stomachSolutions = stomach.Value.Comp.Solution.Contents.ToArray();
 
-                foreach (var solutions in stomachSolutions)
-                {
-                    if (solutions.Reagent.Prototype != "Water")
-                        continue;
+                thirst.AccumulatedDecay += thirst.ActualDecayRate;
 
-                    _solutionContainerSystem.RemoveReagent(stomach.Value, solutions.Reagent, thirst.ActualDecayRate);
-                    ModifyThirst(uid, thirst, -thirst.ActualDecayRate);
+                if (thirst.AccumulatedDecay >= 1.0f)
+                {
+                    var toRemove = (int)thirst.AccumulatedDecay;
+                    foreach (var solutions in stomachSolutions)
+                    {
+                        if (solutions.Reagent.Prototype != "Water")
+                            continue;
+
+                        _solutionContainerSystem.RemoveReagent(stomach.Value,
+                            solutions.Reagent,
+                            toRemove);
+                        ModifyThirst(uid, thirst, -toRemove);
+                    }
+                    thirst.AccumulatedDecay -= toRemove;
                 }
             }
 
