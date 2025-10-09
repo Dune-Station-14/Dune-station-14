@@ -69,6 +69,7 @@ public sealed class DeathstillSystem : EntitySystem
     private void OnEntStrapped(Entity<DeathstillComponent> ent, ref StrappedEvent args)
     {
         EnsureComp<DeathstillVictimComponent>(args.Buckle);
+        SetUnbuckleOnPulledState(args.Buckle, false);
 
         _audioSystem.PlayPredicted(ent.Comp.ConnectSound, ent, args.User);
 
@@ -85,7 +86,15 @@ public sealed class DeathstillSystem : EntitySystem
 
     private void OnEntUnstrapped(Entity<DeathstillComponent> ent, ref UnstrappedEvent args)
     {
+        SetUnbuckleOnPulledState(args.Buckle, true);
         _audioSystem.PlayPredicted(ent.Comp.DisconnectSound, ent, args.User);
+    }
+
+    private void SetUnbuckleOnPulledState(EntityUid uid, bool value)
+    {
+        if (!TryComp<BuckleComponent>(uid, out var buckle))
+            return;
+        _buckle.SetUnbuckledOnPulled((uid, buckle), value);
     }
 
     private void OnDeathstillExamined(Entity<DeathstillComponent> ent, ref ExaminedEvent args)
