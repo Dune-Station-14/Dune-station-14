@@ -70,6 +70,9 @@ public sealed partial class BuckleComponent : Component
     /// Used for client rendering
     /// </summary>
     [ViewVariables] public int? OriginalDrawDepth;
+
+    [DataField, AutoNetworkedField]
+    public bool CanBeUnbuckledOnPulled = true;
 }
 
 public sealed partial class UnbuckleAlertEvent : BaseAlertEvent;

@@ -69,6 +69,12 @@ public abstract partial class SharedBuckleSystem
         Unbuckle(ent!, null);
     }
 
+    public void SetUnbuckledOnPulled(Entity<BuckleComponent> ent, bool value)
+    {
+        ent.Comp.CanBeUnbuckledOnPulled = value;
+        Dirty(ent, ent.Comp);
+    }
+
     #region Pulling
 
     private void OnPullAttempt(Entity<BuckleComponent> ent, ref StartPullAttemptEvent args)
@@ -83,7 +89,7 @@ public abstract partial class SharedBuckleSystem
         if (args.Cancelled || !ent.Comp.Buckled)
             return;
 
-        if (!CanUnbuckle(ent!, args.Puller, false))
+        if (!CanUnbuckle(ent!, args.Puller, false) || !ent.Comp.CanBeUnbuckledOnPulled)
             args.Cancel();
     }
 
