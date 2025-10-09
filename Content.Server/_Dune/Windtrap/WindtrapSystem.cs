@@ -1,11 +1,8 @@
-using Content.Server.Atmos.Components;
 using Content.Shared.Chemistry.Components.SolutionManager;
 using Content.Shared.Chemistry.EntitySystems;
-using Content.Shared.Coordinates;
 using Content.Shared.Light.Components;
 using Content.Shared.Light.EntitySystems;
 using Content.Shared.Maps;
-using Content.Shared.Weather;
 using Robust.Shared.Map;
 using Robust.Shared.Map.Components;
 using Robust.Shared.Timing;
@@ -16,11 +13,9 @@ public sealed class WindtrapSystem : EntitySystem
 {
     [Dependency] private readonly IGameTiming _gameTiming = default!;
     [Dependency] private readonly SharedSolutionContainerSystem _solutionContainerSystem = default!;
-    [Dependency] private readonly SharedTransformSystem _transform = default!;
     [Dependency] private readonly SharedRoofSystem _roof = default!;
     [Dependency] private readonly SharedMapSystem _mapSystem = default!;
     [Dependency] private readonly TurfSystem _turf = default!;
-    [Dependency] private readonly ITileDefinitionManager _tileDefManager = default!;
 
     public override void Initialize()
     {
@@ -41,7 +36,6 @@ public sealed class WindtrapSystem : EntitySystem
         {
             var xform = Transform(uid);
             var gridUid = xform.GridUid;
-
             if (gridUid == null ||
                 !TryComp<MapGridComponent>(gridUid, out var grid))
                 continue;
@@ -49,15 +43,15 @@ public sealed class WindtrapSystem : EntitySystem
             var tilePos = _mapSystem.TileIndicesFor(gridUid.Value, grid, xform.Coordinates);
             var tileRef = _turf.GetTileRef(xform.Coordinates);
 
-            if (TryComp<RoofComponent>(gridUid.Value, out var roofComp) &&
-                _roof.IsRooved((gridUid.Value, grid, roofComp), tilePos))
-                continue;
-
             if (tileRef == null)
                 continue;
-
             var tileDef = _turf.GetContentTileDefinition(tileRef.Value);
+
             if (!tileDef.Weather)
+                continue;
+
+            if (TryComp<RoofComponent>(gridUid.Value, out var roofComp) &&
+                _roof.IsRooved((gridUid.Value, grid, roofComp), tilePos))
                 continue;
 
             if (_gameTiming.CurTime < windtrap.NextGainTime ||
