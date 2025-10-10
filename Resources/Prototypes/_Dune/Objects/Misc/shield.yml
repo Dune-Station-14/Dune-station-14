@@ -46,7 +46,7 @@
   categories: [HideSpawnMenu] # todo this thing is not used
   components:
   - type: Sprite
-    drawDepth: 3
+#    drawDepth: 3 
   - type: Transform
   - type: Appearance
 #  - type: Tag
