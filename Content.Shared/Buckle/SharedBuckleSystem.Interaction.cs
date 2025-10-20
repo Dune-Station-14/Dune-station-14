@@ -1,4 +1,3 @@
-using System.Linq;
 using Content.Shared.Buckle.Components;
 using Content.Shared.DoAfter;
 using Content.Shared.DragDrop;
@@ -21,6 +20,16 @@ public abstract partial class SharedBuckleSystem
 
         SubscribeLocalEvent<BuckleComponent, InteractHandEvent>(OnBuckleInteractHand, before: [typeof(InteractionPopupSystem)]);
         SubscribeLocalEvent<BuckleComponent, GetVerbsEvent<InteractionVerb>>(AddUnbuckleVerb);
+    }
+
+    public void SetUnbuckleDoAfter(Entity<StrapComponent> ent, bool value)
+    {
+        ent.Comp.UnbuckleDoAfter = value;
+    }
+
+    public void TrySetIncapacitatedDelay(Entity<StrapComponent> ent, bool value)
+    {
+        ent.Comp.IncapacitatedDelay = value;
     }
 
     private void OnCanDropTarget(EntityUid uid, StrapComponent component, ref CanDropTargetEvent args)
@@ -47,7 +56,7 @@ public abstract partial class SharedBuckleSystem
                 !CanBuckle(args.Dragged, args.User, uid, true, out var _, buckle))
                 return;
 
-            var doAfterArgs = new DoAfterArgs(EntityManager, args.User, component.BuckleDoafterTime, new BuckleDoAfterEvent(), args.Dragged, args.Dragged, uid)
+            var doAfterArgs = new DoAfterArgs(EntityManager, args.User, component.BuckleDoafterTime, new BuckleDoAfterEvent(component.IncapacitatedDelay), args.Dragged, args.Dragged, uid)
             {
                 BreakOnMove = true,
                 BreakOnDamage = true,
@@ -56,6 +65,29 @@ public abstract partial class SharedBuckleSystem
 
             _doAfter.TryStartDoAfter(doAfterArgs);
         }
+    }
+
+    private bool StartUnbuckleDoAfter(
+        EntityUid user,
+        EntityUid target,
+        EntityUid? strapUid,
+        StrapComponent strapComp)
+    {
+        var doAfterArgs = new DoAfterArgs(
+            EntityManager,
+            user,
+            strapComp.BuckleDoafterTime,
+            new UnbuckleDoAfterEvent(strapComp.IncapacitatedDelay),
+            target,
+            target,
+            strapUid)
+        {
+            BreakOnMove = true,
+            BreakOnDamage = true,
+            AttemptFrequency = AttemptFrequency.EveryTick
+        };
+
+        return _doAfter.TryStartDoAfter(doAfterArgs);
     }
 
     private bool StrapCanDragDropOn(
@@ -104,24 +136,52 @@ public abstract partial class SharedBuckleSystem
         }
 
         // Unbuckle others
-        if (component.BuckledEntities.TryFirstOrNull(out var buckled) && TryUnbuckle(buckled.Value, args.User))
+        if (component.BuckledEntities.TryFirstOrNull(out var buckled))
         {
-            args.Handled = true;
-            return;
-        }
+            if (!TryComp(buckled.Value, out BuckleComponent? buckleComp))
+                return;
+            if (!CanUnbuckle((buckled.Value, buckleComp), args.User, false, out _))
+                return;
 
-        // TODO BUCKLE add out bool for whether a pop-up was generated or not.
+            if (component.UnbuckleDoAfter)
+            {
+                args.Handled = StartUnbuckleDoAfter(args.User, buckled.Value, uid, component);
+            }
+            else if (TryUnbuckle(buckled.Value, args.User))
+            {
+                args.Handled = true;
+                return;
+            }
+
+            // TODO BUCKLE add out bool for whether a pop-up was generated or not.
+        }
     }
 
     private void OnBuckleInteractHand(Entity<BuckleComponent> ent, ref InteractHandEvent args)
     {
+        var (buckled, component) = ent;
         if (args.Handled)
             return;
 
-        if (ent.Comp.BuckledTo != null)
-            args.Handled = TryUnbuckle(ent!, args.User, popup: true);
+        if (component.BuckledTo != null)
+        {
+            if (!TryComp(component.BuckledTo, out StrapComponent? strapComp))
+                return;
+            if (!CanUnbuckle((buckled, component), args.User, false, out _))
+                return;
 
-        // TODO BUCKLE add out bool for whether a pop-up was generated or not.
+            if (strapComp.UnbuckleDoAfter)
+            {
+                args.Handled = StartUnbuckleDoAfter(args.User, buckled, buckled, strapComp);
+            }
+            else
+            {
+                args.Handled = TryUnbuckle(ent!, args.User, popup: true);
+                return;
+            }
+
+            // TODO BUCKLE add out bool for whether a pop-up was generated or not.
+        }
     }
 
     private void AddStrapVerbs(EntityUid uid, StrapComponent component, GetVerbsEvent<InteractionVerb> args)
@@ -142,7 +202,13 @@ public abstract partial class SharedBuckleSystem
 
             var verb = new InteractionVerb()
             {
-                Act = () => TryUnbuckle(entity, args.User, buckleComp: buckledComp),
+                Act = () =>
+                {
+                    if (component.UnbuckleDoAfter)
+                        StartUnbuckleDoAfter(args.User, entity, uid, component);
+                    else
+                        TryUnbuckle(entity, args.User, buckleComp: buckledComp);
+                },
                 Category = VerbCategory.Unbuckle,
                 Text = entity == args.User
                     ? Loc.GetString("verb-self-target-pronoun")
@@ -207,9 +273,17 @@ public abstract partial class SharedBuckleSystem
         if (!CanUnbuckle((uid, component), args.User, false))
             return;
 
+        var strapComp = Comp<StrapComponent>(component.BuckledTo.Value);
+
         InteractionVerb verb = new()
         {
-            Act = () => TryUnbuckle(uid, args.User, buckleComp: component),
+            Act = () =>
+            {
+                if (strapComp.UnbuckleDoAfter)
+                    StartUnbuckleDoAfter(args.User, uid, component.BuckledTo, strapComp);
+                else
+                    TryUnbuckle(uid, args.User, component);
+            },
             Text = Loc.GetString("verb-categories-unbuckle"),
             Icon = new SpriteSpecifier.Texture(new("/Textures/Interface/VerbIcons/unbuckle.svg.192dpi.png"))
         };
