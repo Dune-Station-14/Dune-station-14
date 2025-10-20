@@ -1,0 +1,74 @@
+- type: entity
+  id: Windtrap
+  name: wind trap
+  description:
+  components:
+  - type: Windtrap
+    waterGainPerSecond: 0.05
+  - type: SolutionContainerManager
+    solutions:
+      windtrap:
+        maxVol: 60
+  - type: ExaminableSolution
+    solution: windtrap
+    exactVolume: true
+  - type: DrainableSolution
+    solution: windtrap
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Sprite
+    sprite: Objects/Misc/inflatable_wall.rsi
+    state: inflatable_wall
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.5,-0.5,0.5,0.5"
+        density: 15
+        layer:
+        - WallLayer
+  - type: Damageable
+    damageContainer: StructuralInorganic
+    damageModifierSet: Inflatable
+  - type: Destructible
+    thresholds:
+    - trigger:
+        !type:DamageTrigger
+        damage: 20
+      behaviors:
+      - !type:DoActsBehavior
+        acts: [ "Destruction" ]
+  - type: DisassembleOnAltVerb
+    prototypeToSpawn: WindtrapPacked
+    disassembleTime: 10
+  - type: InflatableSafeDisassembly
+  - type: Airtight
+  - type: Transform
+    anchored: true
+  placement:
+    mode: SnapgridCenter
+
+- type: entity
+  id: WindtrapPacked
+  parent: BaseItem
+  name: packed wind trap
+  description:
+  components:
+  - type: Sprite
+    sprite: Objects/Misc/inflatable_wall.rsi
+    state: item_wall
+  - type: Item
+    sprite: Objects/Misc/inflatable_wall.rsi
+    size: Small
+  - type: SpawnAfterInteract
+    prototype: Windtrap
+    doAfter: 1
+    removeOnInteract: true
+  - type: Clickable
+  - type: PhysicalComposition
+  - type: Tag
+    tags:
+    - Inflatable
