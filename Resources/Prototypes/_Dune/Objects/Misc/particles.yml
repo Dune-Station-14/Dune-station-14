@@ -1,0 +1,49 @@
+- type: entity
+  id: DuneParticleCrowbar # just to test this shit
+  parent: Crowbar
+  suffix: debug, particle spawner
+  components:
+  - type: ParticleCreator
+    particleProto: DuneParticleWind
+
+# make more particles here, and for the love of god make them as transparent/fast as you can
+
+- type: entity
+  id: DuneParticleWind
+  name: Wind
+  suffix: particle
+  components:
+  - type: Sprite
+    sprite: _Dune/Effects/Particles/wind.rsi
+    state: wind
+    drawdepth: Effects
+
+- type: entity
+  id: DuneParticleSandSmall
+  name: sand
+  suffix: particle, small
+  components:
+  - type: Sprite
+    sprite: _Dune/Effects/Particles/sand.rsi
+    state: sand_small
+    drawdepth: Effects
+
+- type: entity
+  id: DuneParticleSand
+  name: sand
+  suffix: particle
+  components:
+  - type: Sprite
+    sprite: _Dune/Effects/Particles/sand.rsi
+    state: sand_medium
+    drawdepth: Effects
+
+- type: entity
+  id: DuneParticleSandstorm
+  name: sand
+  suffix: particle
+  components:
+  - type: Sprite
+    sprite: _Dune/Effects/Particles/sand.rsi
+    state: sandstorm
+    drawdepth: Effects

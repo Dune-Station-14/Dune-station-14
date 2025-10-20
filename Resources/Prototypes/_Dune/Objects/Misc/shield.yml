@@ -1,0 +1,54 @@
+- type: entity
+  id: ClothingHandsDuneEnergyShieldLight
+  parent: ClothingHandsButcherable
+  name: energy gloves
+  description: These may look like regular gloves, but they have a hidden button that activates the energy shield.
+  components:
+  - type: Sprite
+    sprite: Clothing/Hands/Gloves/spaceninja.rsi
+    layers:
+    - state: icon
+      map: [ "enum.ToggleableVisuals.Layer" ]
+    - type: Clothing
+      sprite: Clothing/Hands/Gloves/spaceninja.rsi
+  - type: ClothingGrantComponent
+    component:
+    - type: ActionGrant
+      actions:
+      - DuneActionToggleShield
+
+- type: entity
+  parent: BaseAction
+  id: DuneActionToggleShield
+  name: toggle shield
+  description: Toggle the Holz shield.
+  components:
+  - type: Action
+    useDelay: 10
+    raiseOnAction: true
+    itemIconStyle: BigAction
+    sound: !type:SoundPathSpecifier
+      path: /Audio/Items/appraiser.ogg
+      params:
+        volume: -5
+        pitch: 1.2
+        maxDistance: 5
+        variation: 0.2
+    icon:
+      sprite: Clothing/Hands/Gloves/spaceninja.rsi
+      state: icon
+  - type: InstantAction
+    event: !type:DuneToggleShieldActionEvent
+
+- type: entity
+  id: DuneShieldVisual
+  name: shield visual
+  categories: [HideSpawnMenu] # todo this thing is not used
+  components:
+  - type: Sprite
+#    drawDepth: 3 
+  - type: Transform
+  - type: Appearance
+#  - type: Tag
+ #   tags:
+  #  - HideContextMenu

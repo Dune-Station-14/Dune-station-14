@@ -10,6 +10,7 @@ using Robust.Shared.Random;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using System.Diagnostics.CodeAnalysis;
+using Content.Shared._Dune.Thirst; // dune
 
 namespace Content.Shared.Nutrition.EntitySystems;
 
@@ -34,6 +35,16 @@ public sealed class ThirstSystem : EntitySystem
         SubscribeLocalEvent<ThirstComponent, RefreshMovementSpeedModifiersEvent>(OnRefreshMovespeed);
         SubscribeLocalEvent<ThirstComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<ThirstComponent, RejuvenateEvent>(OnRejuvenate);
+    }
+    public void SetBaseDecayRate(EntityUid uid, float newRate, ThirstComponent? component = null) // dune
+    {
+        if (!Resolve(uid, ref component))
+            return;
+
+        component.BaseDecayRate = newRate;
+        Dirty(uid, component);
+
+        UpdateEffects(uid, component);
     }
 
     private void OnMapInit(EntityUid uid, ThirstComponent component, MapInitEvent args)

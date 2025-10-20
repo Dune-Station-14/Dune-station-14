@@ -1,0 +1,14 @@
+# - type: shader
+  # id: ShieldShader
+  # kind: source
+  # path: "/Textures/_Dune/Shaders/ShieldShader.swsl"
+
+- type: shader
+  id: ShieldOutline
+  kind: source
+  path: "/Textures/Shaders/outline.swsl"
+  params:
+    outline_color: "#035efc55"
+    light_boost: 2
+    light_gamma: 0.9
+    light_whitepoint: 1
