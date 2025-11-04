@@ -33,11 +33,16 @@
           reagents:
           - ReagentId: Slime
             Quantity: 10
+        water:
+          maxVol: 600
+          reagents:
+          - ReagentId: Water
+            Quantity: 600
     - type: Item
       size: Small
       heldPrefix: brain
 
-      
+
 - type: entity
   id: OrganSlimeLungs
   parent: BaseHumanOrgan

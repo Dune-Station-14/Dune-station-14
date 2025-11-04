@@ -82,6 +82,11 @@
         reagents:
         - ReagentId: UncookedAnimalProteins
           Quantity: 5
+      water:
+        maxVol: 100
+        reagents:
+        - ReagentId: Water
+          Quantity: 100
   - type: Stomach
   - type: Metabolizer
     maxReagents: 3
@@ -102,6 +107,11 @@
     solutions:
       stomach:
         maxVol: 30
+      water:
+        maxVol: 35
+        reagents:
+        - ReagentId: Water
+          Quantity: 25
   - type: Item
     size: Small
     heldPrefix: stomach

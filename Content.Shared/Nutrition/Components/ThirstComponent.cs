@@ -1,4 +1,5 @@
 using Content.Shared.Alert;
+using Content.Shared.Chemistry.Components;
 using Content.Shared.Nutrition.EntitySystems;
 using Robust.Shared.GameStates;
 using Robust.Shared.Prototypes;
@@ -10,11 +11,23 @@ namespace Content.Shared.Nutrition.Components;
 [AutoGenerateComponentState(fieldDeltas: true), AutoGenerateComponentPause]
 public sealed partial class ThirstComponent : Component
 {
+
+    /// <summary>
+    ///     The solution inside of this stomach this transfers reagents to the body.
+    /// </summary>
+    [ViewVariables]
+    public Entity<SolutionComponent>? Solution;
+
+    public string WaterSolutionName = "water";
+
     // Base stuff
     [ViewVariables(VVAccess.ReadWrite)]
     [DataField("baseDecayRate")]
     [AutoNetworkedField]
     public float BaseDecayRate = 0.1f;
+
+    [DataField, ViewVariables, AutoNetworkedField]
+    public float AccumulatedDecay = 0f;
 
     [ViewVariables(VVAccess.ReadWrite)]
     [AutoNetworkedField]
@@ -64,7 +77,7 @@ public sealed partial class ThirstComponent : Component
     {
         {ThirstThreshold.Thirsty, "Thirsty"},
         {ThirstThreshold.Parched, "Parched"},
-        {ThirstThreshold.Dead, "Parched"},
+        {ThirstThreshold.Dead, "Dead"},
     };
 }
 
