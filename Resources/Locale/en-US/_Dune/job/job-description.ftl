@@ -1,0 +1,9 @@
+job-description-atreidessurvivor = An Atreides survivor from the Harkonnen invasion. Get revenge on the Harkonnen by whatever means necessary, including allying with the fremen.
+job-description-fremen = Natives of the planet. Get high on spice, and hunt Harkonnen for sport.
+job-description-lisanalgaib = Voice of the outer world; giver of water. You are the prophet the fremen people have long been awaiting for.
+job-description-naib = Leader of a fremen sietch.
+job-description-harkonnen = A harkonnen grunt; your life is as meaningless as the grains of sand in the desert.
+job-description-baron = You are the Baron of House Harkonnen. Harvest spice, eliminate the fremen, and lead your people to glory.
+job-description-na-baron = The next-in-line Baron of House Harkonnen.
+job-description-offworlder = You are an offworlder living on an inhospitable desert planet. Try to survive.
+job-description-smuggler = Trade with the locals on the planet in exchange for resources, equipment, and items obtained from off world.

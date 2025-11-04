@@ -1,0 +1,32 @@
+- type: job
+  id: Naib
+  name: job-name-naib
+  description: job-description-naib
+  playTimeTracker: JobNaib
+  startingGear: NaibGear
+  icon: "JobIconQuarterMaster"
+#  access:
+#  - Harkonnen put this in later
+
+# All of this shits a placeholder. Should have armor set, a weapon, a shield, some food and water
+- type: startingGear
+  id: NaibGear
+  equipment:
+    id: QuartermasterPDA
+    ears: ClothingHeadsetQM
+    belt: BoxFolderClipboard
+    pocket1: AppraisalTool
+  storage:
+    back:
+    - Flash
+
+- type: chameleonOutfit
+  id: NaibChameleonOutfit
+  job: Naib
+  equipment:
+    head: ClothingHeadHatQMsoft
+    eyes: ClothingEyesGlassesSunglasses
+    mask: ClothingMaskBreath
+    outerClothing: ClothingOuterWinterQM
+    neck: ClothingNeckCloakQm
+    gloves: ClothingHandsKnuckleDustersQM

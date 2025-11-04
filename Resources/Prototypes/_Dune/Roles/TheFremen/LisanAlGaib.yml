@@ -1,0 +1,32 @@
+- type: job
+  id: LisanAlGaib
+  name: job-name-lisanalgaib
+  description: job-description-lisanalgaib
+  playTimeTracker: JobLisanAlGaib
+  startingGear: LisanAlGaibGear
+  icon: "JobIconQuarterMaster"
+#  access:
+#  - Fremen put this in later
+
+# All of this shits a placeholder. Should have armor set, a weapon, some food and water
+- type: startingGear
+  id: LisanAlGaibGear
+  equipment:
+    id: QuartermasterPDA
+    ears: ClothingHeadsetQM
+    belt: BoxFolderClipboard
+    pocket1: AppraisalTool
+  storage:
+    back:
+    - Flash
+
+- type: chameleonOutfit
+  id: LisanAlGaibChameleonOutfit
+  job: LisanAlGaib
+  equipment:
+    head: ClothingHeadHatQMsoft
+    eyes: ClothingEyesGlassesSunglasses
+    mask: ClothingMaskBreath
+    outerClothing: ClothingOuterWinterQM
+    neck: ClothingNeckCloakQm
+    gloves: ClothingHandsKnuckleDustersQM

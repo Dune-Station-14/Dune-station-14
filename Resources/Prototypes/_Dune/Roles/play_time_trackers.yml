@@ -1,0 +1,35 @@
+# Overall play time, across all roles.
+# This tracker must exist, it is used directly by PlayTimeTrackingManager
+#- type: playTimeTracker
+#  id: Overall
+
+# Jobs
+- type: playTimeTracker
+  id: JobAtreidesSurvivor
+
+- type: playTimeTracker
+  id: JobFremen
+
+- type: playTimeTracker
+  id: JobLisanAlGaib
+
+- type: playTimeTracker
+  id: JobNaib
+
+- type: playTimeTracker
+  id: JobHarkonnen
+
+- type: playTimeTracker
+  id: JobBaron
+
+- type: playTimeTracker
+  id: Jobna-Baron
+
+- type: playTimeTracker
+  id: JobOffworlder
+
+- type: playTimeTracker
+  id: JobSmuggler
+
+
+
